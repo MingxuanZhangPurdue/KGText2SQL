@@ -36,31 +36,22 @@ def main(args):
     2. Generate standard SQL queries that follow best practices
     3. Consider edge cases and data validation
     4. Can handle complex joins, aggregations, and nested queries
-    5. Provide explanations for the generated SQL when needed
-    
     When given a question, you will convert it to a valid SQL query based on the provided database schema."""
 
-    print ("Reading questions from ", args.questions)
-
     # Load questions from JSON file
+    print ("Reading questions from ", args.questions)
     with open(args.questions, 'r') as f:
         questions = json.load(f)
-
     print ("Total number of questions: ", len(questions))
 
-
-    db = args.db
-    dataset_dir = args.dir
-    table = args.tables
-
-    # load schemas
+    # load schemas for all the DBs
     print ("Loading schemas...")
-    schemas, _ = load_tables([os.path.join(dataset_dir, table)])
+    schemas, _ = load_tables([os.path.join(args.dir, args.tables)])
 
+    # Backup in-memory copies of all the DBs and create the live connections
     print ("Loading DB connections...")
-    #Backup in-memory copies of all the DBs and create the live connections
     for db_id, schema in tqdm(schemas.items(), desc="DB connections"):
-        sqlite_path = Path(dataset_dir) / db / db_id / f"{db_id}.sqlite"
+        sqlite_path = Path(args.dir) / args.db / db_id / f"{db_id}.sqlite"
         source: sqlite3.Connection
         with sqlite3.connect(str(sqlite_path)) as source:
             dest = sqlite3.connect(':memory:')
@@ -68,24 +59,43 @@ def main(args):
             source.backup(dest)
         schema.connection = dest
 
-
-    for example in tqdm(questions):
-
-        question = example["question"]
-
-        db_id = example["db_id"]
-
+    # Get all the CREATE statements for all the DBs
+    db_schemas = {}
+    for db_id, _ in schemas.items():
         connection = schemas[db_id].connection
         cursor = connection.cursor()
-
         # Query sqlite_master table to get all CREATE statements
         cursor.execute("""
             SELECT sql 
             FROM sqlite_master 
             WHERE type='table' AND sql IS NOT NULL
         """)
+        # Convert list of tuples to a single string of CREATE statements
+        create_statements = '\n'.join(row[0] for row in cursor.fetchall())
+        db_schemas[db_id] = create_statements
 
-        
+    # Generate SQL queries for each question using OpenAI API
+    for example in tqdm(questions, desc="Generating SQL queries"):
+        question = example["question"]
+        db_id = example["db_id"]
+        code_representation = db_schemas[db_id]
+
+        user_prompt = f"""### Database Schema:
+        {code_representation}
+        ### Question:
+        {question}
+        ### SQL Query:
+        """
+
+        response = client.chat.completions.create(
+            model=args.model,
+            messages=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": user_prompt},
+            ],
+            temperature=args.temperature,
+            max_tokens=args.max_tokens,
+        )
 
 
     # make sure the output directory exists
