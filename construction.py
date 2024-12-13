@@ -21,7 +21,7 @@ def parse_args():
     parser.add_argument("--db", type=str, default="database")
 
     # chat completion parameters
-    parser.add_argument("--model", default="gpt-4o-mini", type=str, help="The model to use for the SQL generation.")
+    parser.add_argument("--model", default="chatgpt-4o-latest", type=str, help="The model to use for the SQL generation.")
     parser.add_argument("--temperature", default=0.0, type=float, help="The temperature for the SQL generation, between 0 and 2.0.")
     parser.add_argument("--max_tokens", default=1000, type=int, help="The maximum number of tokens to generate.")
     return parser.parse_args()
