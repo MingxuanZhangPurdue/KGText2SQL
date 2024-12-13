@@ -74,6 +74,8 @@ def main(args):
         create_statements = '\n'.join(row[0] for row in cursor.fetchall())
         db_schemas[db_id] = create_statements
 
+    predicted_sqls = []
+
     # Generate SQL queries for each question using OpenAI API
     for example in tqdm(questions, desc="Generating SQL queries"):
         question = example["question"]
@@ -97,10 +99,17 @@ def main(args):
             max_tokens=args.max_tokens,
         )
 
+        predicted_sql = response.choices[0].message.content
+        predicted_sqls.append(predicted_sql)
 
     # make sure the output directory exists
     os.makedirs(os.path.dirname(args.output), exist_ok=True)
 
+    # write the predicted SQLs to sql file where each line is a SQL query
+    print ("Writing predicted SQLs to ", args.output)
+    with open(args.output, 'w') as f:
+        for sql in predicted_sqls:
+            f.write(sql + '\n')
 
 if __name__ == "__main__":
     args = parse_args()
