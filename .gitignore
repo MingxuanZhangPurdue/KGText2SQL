@@ -13,9 +13,9 @@ __pycache__/
 datasets/spider_data/*
 !datasets/spider_data/.gitkeep
 
-# ignore all files in requests directory but keep the requests directory
-requests/*
-!requests/.gitkeep
+# ignore all files in results directory but keep the results directory
+results/*
+!results/.gitkeep
 
 # ignore all DS_Store files
 **/.DS_Store
