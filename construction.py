@@ -14,14 +14,14 @@ load_dotenv()
 
 def parse_args():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--input", type=str, required=True)
+    parser.add_argument("--input", type=str, default="datasets/spider_data/dev.json")
     parser.add_argument("--output", type=str, default="results/predicted.sql")
     parser.add_argument("--dir", type=str, default="datasets/spider_data")
     parser.add_argument("--tables", type=str, default="tables.json")
     parser.add_argument("--db", type=str, default="database")
 
     # chat completion parameters
-    parser.add_argument("--model", default="chatgpt-4o-latest", type=str, help="The model to use for the SQL generation.")
+    parser.add_argument("--model", default="gpt-3.5-turbo", type=str, help="The model to use for the SQL generation.")
     parser.add_argument("--temperature", default=0.0, type=float, help="The temperature for the SQL generation, between 0 and 2.0.")
     parser.add_argument("--max_tokens", default=1000, type=int, help="The maximum number of tokens to generate.")
     return parser.parse_args()
@@ -39,10 +39,10 @@ def main(args):
     When given a question, you will convert it to a valid SQL query based on the provided database schema."""
 
     # Load questions from JSON file
-    print ("Reading questions from ", args.questions)
-    with open(args.questions, 'r') as f:
-        questions = json.load(f)
-    print ("Total number of questions: ", len(questions))
+    print ("Reading questions from ", args.input)
+    with open(args.input, 'r') as f:
+        examples = json.load(f)
+    print ("Total number of questions: ", len(examples))
 
     # load schemas for all the DBs
     print ("Loading schemas...")
@@ -77,7 +77,7 @@ def main(args):
     predicted_sqls = []
 
     # Generate SQL queries for each question using OpenAI API
-    for example in tqdm(questions, desc="Generating SQL queries"):
+    for example in tqdm(examples, desc="Generating SQL queries"):
         question = example["question"]
         db_id = example["db_id"]
         code_representation = db_schemas[db_id]
