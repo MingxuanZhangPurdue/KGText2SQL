@@ -474,7 +474,6 @@ def print_scores(scores, etype):
             this_scores = [scores[level]['partial'][type_]['f1'] for level in levels]
             print("{:20} {:<20.3f} {:<20.3f} {:<20.3f} {:<20.3f} {:<20.3f}".format(type_, *this_scores))
 
-
 def evaluate(gold, predict, db_dir, etype, kmaps):
     with open(gold) as f:
         glist = [l.strip().split('\t') for l in f.readlines() if len(l.strip()) > 0]
@@ -490,6 +489,7 @@ def evaluate(gold, predict, db_dir, etype, kmaps):
                      'group', 'order', 'and/or', 'IUEN', 'keywords']
     entries = []
     scores = {}
+    incorrect_queries = []
 
     for level in levels:
         scores[level] = {'count': 0, 'partial': {}, 'exact': 0.}
@@ -498,6 +498,7 @@ def evaluate(gold, predict, db_dir, etype, kmaps):
             scores[level]['partial'][type_] = {'acc': 0., 'rec': 0., 'f1': 0.,'acc_count':0,'rec_count':0}
 
     eval_err_num = 0
+    idx = 0
     for p, g in zip(plist, glist):
         p_str = p[0]
         g_str, db = g
@@ -548,6 +549,14 @@ def evaluate(gold, predict, db_dir, etype, kmaps):
             if exec_score:
                 scores[hardness]['exec'] += 1.0
                 scores['all']['exec'] += 1.0
+            else:
+                incorrect_queries.append({
+                    "database": db_name,
+                    "hardness": hardness,
+                    "predicted": p_str,
+                    "gold": g_str,
+                    "idx": idx
+                })
 
         if etype in ["all", "match"]:
             exact_score = evaluator.eval_exact_match(p_sql, g_sql)
@@ -581,6 +590,7 @@ def evaluate(gold, predict, db_dir, etype, kmaps):
                 'exact': exact_score,
                 'partial': partial_scores
             })
+        idx += 1
 
     for level in levels:
         if scores[level]['count'] == 0:
@@ -609,6 +619,8 @@ def evaluate(gold, predict, db_dir, etype, kmaps):
                         scores[level]['partial'][type_]['rec'] + scores[level]['partial'][type_]['acc'])
 
     print_scores(scores, etype)
+
+    return incorrect_queries
 
 
 def eval_exec_match(db, p_str, g_str, pred, gold):
@@ -853,6 +865,7 @@ if __name__ == "__main__":
     parser.add_argument('--db', dest='db', type=str)
     parser.add_argument('--table', dest='table', type=str)
     parser.add_argument('--etype', dest='etype', type=str)
+    parser.add_argument('--output', dest='output', default=None, type=str, help='Output file for incorrect queries')
     args = parser.parse_args()
 
     gold = args.gold
@@ -865,4 +878,14 @@ if __name__ == "__main__":
 
     kmaps = build_foreign_key_map_from_json(table)
 
-    evaluate(gold, pred, db_dir, etype, kmaps)
+    # If output is not specified, set it to incorrect.json in the same directory as pred
+    if args.output is None:
+        args.output = os.path.join(os.path.dirname(pred), 'incorrect.json')
+
+    incorrect_queries = evaluate(gold, pred, db_dir, etype, kmaps)
+
+    # Save incorrect queries to JSON file if specified
+    if args.output and incorrect_queries:
+        print(f"Saving incorrect queries to {args.output}")
+        with open(args.output, 'w', encoding='utf-8') as f:
+            json.dump(incorrect_queries, f, ensure_ascii=False)
