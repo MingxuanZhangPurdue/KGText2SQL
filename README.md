@@ -34,10 +34,10 @@ OPENAI_API_KEY=your_openai_api_key
 
 ### Generate predictions
 
-Please use run the construction.py to generate predicted SQL queries. You can change the prompts in the construction.py file.
+Please use run the predict.py to generate predicted SQL queries. You can change the prompts in the predict.py file.
 
 ```bash
-python construction.py \
+python predict.py \
     --input datasets/spider_data/dev.json \
     --output results/predicted.sql \
     --dir datasets/spider_data \
