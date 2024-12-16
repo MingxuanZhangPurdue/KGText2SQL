@@ -881,6 +881,9 @@ if __name__ == "__main__":
     # If output is not specified, set it to incorrect.json in the same directory as pred
     if args.output is None:
         args.output = os.path.join(os.path.dirname(pred), 'incorrect.json')
+    else:
+        # Make sure the output directory exists
+        os.makedirs(os.path.dirname(args.output), exist_ok=True)
 
     incorrect_queries = evaluate(gold, pred, db_dir, etype, kmaps)
 
