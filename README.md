@@ -51,7 +51,7 @@ python predict.py \
 
 ### Evaluate predictions
 
-Please run the evaluation/evaluation.py to evaluate the predicted SQL queries. A json file containing the incorrect queries will be generated in the same directory as the predicted SQL queries.
+Please run the evaluation/evaluation.py to evaluate the predicted SQL queries. A json file containing the incorrect queries will be generated in the same directory as the predicted SQL queries if the `--output` argument is not specified.
 
 ```bash
 python evaluation/evaluation.py \
