@@ -31,14 +31,9 @@ def main(args):
 
     client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY", "<your OpenAI API key if not set as env var>"))
 
-    system_prompt = """You are an expert SQL assistant specialized in converting natural language queries into accurate SQL statements. You:
-    1. Understand database schemas and relationships
-    2. Generate standard SQL queries that follow best practices
-    3. Consider edge cases and data validation
-    4. Can handle complex joins, aggregations, and nested queries
+    system_prompt = """You are an expert SQL assistant specialized in converting natural language queries into accurate SQL statements.
     When given a question, you will convert it to a valid SQL query based on the provided database schema.
-    Only output the raw SQL query without any markdown formatting, code blocks, or additional text. 
-    For example, output should look like: SELECT * FROM table"""
+    Only output the raw SQL query in one line without any markdown formatting, code blocks, or additional text."""
 
     # Load questions from JSON file
     print ("Reading questions from ", args.input)
