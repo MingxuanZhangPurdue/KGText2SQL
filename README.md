@@ -39,11 +39,11 @@ Please use run the predict.py to generate predicted SQL queries. You can change 
 ```bash
 python predict.py \
     --input datasets/spider_data/dev.json \
-    --output results/predicted.sql \
+    --output datasets/spider_data/dev_pred.sql \
     --dir datasets/spider_data \
     --tables tables.json \
     --db database \
-    --model gpt-3.5-turbo \
+    --model gpt-4o-mini \
     --temperature 0.0 \
     --max_tokens 1000
 ```
