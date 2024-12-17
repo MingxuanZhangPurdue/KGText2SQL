@@ -38,7 +38,7 @@ def main(args):
     4. Can handle complex joins, aggregations, and nested queries
     When given a question, you will convert it to a valid SQL query based on the provided database schema.
     Only output the raw SQL query without any markdown formatting, code blocks, or additional text. 
-    For example, output should look like: SELECT * FROM table;"""
+    For example, output should look like: SELECT * FROM table"""
 
     # Load questions from JSON file
     print ("Reading questions from ", args.input)
