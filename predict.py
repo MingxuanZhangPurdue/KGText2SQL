@@ -15,7 +15,7 @@ load_dotenv()
 def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument("--input", type=str, default="datasets/spider_data/dev.json")
-    parser.add_argument("--output", type=str, default="results/predicted.sql")
+    parser.add_argument("--output", type=str, default="results/dev_pred.sql")
     parser.add_argument("--dir", type=str, default="datasets/spider_data")
     parser.add_argument("--tables", type=str, default="tables.json")
     parser.add_argument("--db", type=str, default="database")
