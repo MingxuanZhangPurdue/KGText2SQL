@@ -34,7 +34,7 @@ OPENAI_API_KEY=your_openai_api_key
 
 ### Generate predictions
 
-Please use run the predict.py to generate predicted SQL queries. You can change the prompts in the predict.py file.
+Please use run the predict.py to generate predicted SQL queries for a given question dataset. You can change the prompts in the predict.py file.
 
 ```bash
 python predict.py \
@@ -51,7 +51,7 @@ python predict.py \
 
 ### Evaluate predictions
 
-Please run the evaluation/evaluation.py to evaluate the predicted SQL queries. A json file containing the incorrect queries will be generated in the same directory as the predicted SQL queries if the `--output` argument is not specified.
+Please run the evaluation/evaluation.py to evaluate the predicted SQL queries. A json file containing the incorrect queries will be generated in the same directory as the predicted SQL queries if the `--output` argument is not specified. Currently, only the execution accuracy is supported.
 
 ```bash
 python evaluation/evaluation.py \
