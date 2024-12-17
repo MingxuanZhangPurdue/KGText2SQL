@@ -21,7 +21,7 @@ def parse_args():
     parser.add_argument("--db", type=str, default="database")
 
     # chat completion parameters
-    parser.add_argument("--model", default="gpt-3.5-turbo", type=str, help="The model to use for the SQL generation.")
+    parser.add_argument("--model", default="gpt-4o-mini", type=str, help="The model to use for the SQL generation.")
     parser.add_argument("--temperature", default=0.0, type=float, help="The temperature for the SQL generation, between 0 and 2.0.")
     parser.add_argument("--max_tokens", default=1000, type=int, help="The maximum number of tokens to generate.")
     return parser.parse_args()
@@ -36,7 +36,9 @@ def main(args):
     2. Generate standard SQL queries that follow best practices
     3. Consider edge cases and data validation
     4. Can handle complex joins, aggregations, and nested queries
-    When given a question, you will convert it to a valid SQL query based on the provided database schema."""
+    When given a question, you will convert it to a valid SQL query based on the provided database schema.
+    Only output the raw SQL query without any markdown formatting, code blocks, or additional text. 
+    For example, output should look like: SELECT * FROM table;"""
 
     # Load questions from JSON file
     print ("Reading questions from ", args.input)
