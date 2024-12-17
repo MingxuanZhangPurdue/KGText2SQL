@@ -55,7 +55,7 @@ Please run the evaluation/evaluation.py to evaluate the predicted SQL queries. A
 
 ```bash
 python evaluation/evaluation.py \
-    --gold datasets/spider_data/dev.json \
+    --gold datasets/spider_data/dev_gold.sql \
     --pred datasets/spider_data/dev_pred.sql \
     --tables datasets/spider_data/tables.json \
     --db datasets/spider_data/database \
