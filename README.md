@@ -57,9 +57,10 @@ Please run the evaluation/evaluation.py to evaluate the predicted SQL queries. A
 python evaluation/evaluation.py \
     --gold datasets/spider_data/dev_gold.sql \
     --pred datasets/spider_data/dev_pred.sql \
-    --tables datasets/spider_data/tables.json \
+    --table datasets/spider_data/tables.json \
     --db datasets/spider_data/database \
     --etype exec \
-    --output results/incorrect.json
+    --output results/incorrect.json \
+    --input datasets/spider_data/dev.json
 ```
 

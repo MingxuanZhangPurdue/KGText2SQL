@@ -553,7 +553,7 @@ def evaluate(gold, predict, db_dir, etype, kmaps):
                 incorrect_queries.append({
                     "database": db_name,
                     "hardness": hardness,
-                    "predicted": p_str,
+                    "pred": p_str,
                     "gold": g_str,
                     "idx": idx
                 })
@@ -866,6 +866,7 @@ if __name__ == "__main__":
     parser.add_argument('--table', dest='table', type=str)
     parser.add_argument('--etype', dest='etype', type=str)
     parser.add_argument('--output', dest='output', default=None, type=str, help='Output file for incorrect queries')
+    parser.add_argument('--input', dest='input', type=str, default=None, help='Path to the input file containing questions')
     args = parser.parse_args()
 
     gold = args.gold
@@ -886,6 +887,12 @@ if __name__ == "__main__":
         os.makedirs(os.path.dirname(args.output), exist_ok=True)
 
     incorrect_queries = evaluate(gold, pred, db_dir, etype, kmaps)
+
+    if args.input:
+        with open(args.input, 'r') as f:
+            questions = json.load(f)
+        for query in incorrect_queries:
+            query['question'] = questions[query['idx']]["question"]
 
     # Save incorrect queries to JSON file if specified
     if args.output and incorrect_queries:
