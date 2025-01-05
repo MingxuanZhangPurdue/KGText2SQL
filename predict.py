@@ -33,7 +33,7 @@ def main(args):
 
     system_prompt = """You are an expert SQL assistant specialized in converting natural language queries into accurate SQL statements.
     When given a question, you will convert it to a valid SQL query based on the provided database schema.
-    Only output the raw SQL query in one line without any markdown formatting, code blocks, or additional text."""
+    Output ONLY the SQL query without any additional formatting - no markdown, no code blocks, no backticks, no 'sql' prefix."""
 
     # Load questions from JSON file
     print ("Reading questions from ", args.input)
@@ -96,7 +96,7 @@ def main(args):
             max_tokens=args.max_tokens,
         )
 
-        predicted_sql = response.choices[0].message.content
+        predicted_sql = response.choices[0].message.content.strip().replace('\n', ' ').replace('    ', ' ')
         predicted_sqls.append(predicted_sql)
 
     # make sure the output directory exists

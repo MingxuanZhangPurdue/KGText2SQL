@@ -43,7 +43,7 @@ python predict.py \
     --dir datasets/spider_data \
     --tables tables.json \
     --db database \
-    --model gpt-4o-mini \
+    --model gpt-4o \
     --temperature 0.0 \
     --max_tokens 1000
 ```
@@ -63,4 +63,3 @@ python evaluation/evaluation.py \
     --output results/incorrect.json \
     --input datasets/spider_data/dev.json
 ```
-
