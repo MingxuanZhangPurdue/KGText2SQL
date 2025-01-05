@@ -533,7 +533,7 @@ def evaluate(gold, predict, db_dir, etype, kmaps):
             "where": []
             }
             eval_err_num += 1
-            print("eval_err_num:{}".format(eval_err_num))
+            print("eval_err_num:{}".format(eval_err_num), "idx:{}".format(idx))
 
         # rebuild sql for value evaluation
         kmap = kmaps[db_name]

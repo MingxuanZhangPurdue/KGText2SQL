@@ -31,9 +31,9 @@ def main(args):
 
     client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY", "<your OpenAI API key if not set as env var>"))
 
-    system_prompt = """You are an expert SQL assistant specialized in converting natural language queries into accurate SQL statements.
-    When given a question, you will convert it to a valid SQL query based on the provided database schema.
-    Output ONLY the SQL query without any additional formatting - no markdown, no code blocks, no backticks, no 'sql' prefix."""
+    system_prompt = """You are an expert SQL assistant specialized in converting natural language queries into accurate SQLite queries.
+    When given a question, you will convert it to a valid SQLite query based on the provided database schema.
+    Output ONLY the SQL query without any additional formatting - no markdown, no code blocks, no backticks, no 'sql' prefix."""    
 
     # Load questions from JSON file
     print ("Reading questions from ", args.input)
